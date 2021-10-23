@@ -1,0 +1,38 @@
+﻿ /*
+            The candidate must write an application that: 
+            gets the list of the cities 
+            from Musement's API for each city gets the forecast for the next 2 days 
+            using http://api.weatherapi.com and 
+            print to STDOUT 
+            "Processed city [city name] | [weather today] - [wheather tomorrow]"
+            
+            */
+
+            /*
+            Prerequistes: piano free in 
+                weatherapi.com per farti dare API KEY
+
+
+            1.GET ALL CITIES FROM https://api.musement.com/api/v3/cities
+
+            2.foreach city get
+http://api.weatherapi.com/v1/forecast.json?key=%5Byour-key%5D&q=%5Blat%5D,%5Blong%5D&days=2
+            (days meglio renderli parametrici)
+            API KEY DA FREE PLAN
+            LAT Long potrebbero non essere precisi non fa niente
+
+            3. Processare i dati ricevuti (farlo in maniera scalabile):
+                Console.writeline
+
+
+            FARE AMBIENTE DOCKER E TESTARE CON WINDOWS E LINUX
+            https://docs.microsoft.com/it-it/dotnet/core/docker/build-container?tabs=windows
+            */
+
+            //https://andrewlock.net/using-dependency-injection-in-a-net-core-console-application/
+
+            //SI PUO FARE IN TDD
+            //1. Test che estrae uno o più città
+            //2. Test che non estrae nessuna città
+            //3. Test che si spacca sulla weather api o mus api
+            //4. Test che si spacca sulla writeline
