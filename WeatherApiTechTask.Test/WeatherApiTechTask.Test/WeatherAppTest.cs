@@ -4,7 +4,7 @@ using System;
 
 namespace WeatherApiTechTask.Test
 {
-    public class Tests
+    public class WeatherAppTest
     {
         private readonly IWeatherApp _sut;
         //private IWeatherLoader _loader;
@@ -17,17 +17,35 @@ namespace WeatherApiTechTask.Test
         private readonly CityLoadConfiguration _cityConfig = new CityLoadConfiguration();
         private readonly WeatherLoadConfiguration _weatherConfig = new WeatherLoadConfiguration();
 
+        private CityTestInputObj[] _testData = new CityTestInputObj[]{
+            new CityTestInputObj("Milan", 40.9, 50.3, 
+                "Sunny", "Cloudy and rainy", 
+                "Processed city Milan | Sunny - Cloudy and rainy"),
+            new CityTestInputObj("Turin", 90, 80.977, 
+                "Cloudy and rainy", "Cloudy and rainy", 
+                "Processed city Turin | Cloudy and rainy - Cloudy and rainy"),
+            new CityTestInputObj("Pescara", 266, 54.3, 
+                "Partially cloudy", "Sunny", 
+                "Processed city Pescara | Partially cloudy - Sunny"),
+        };
+
+
 
         //PROVA NETMOCK
         [SetUp]
         public void Setup()
         {
+            var citiesInfoResponse = new CitiesInfoResponse() { Cities = new CityInfoResponse[_testData.Length] };
+            foreach (var testData in _testData)
+            {
+                citiesInfoResponse.Cities.Add(new CityInfoResponse 
+                    { Name = testData.Name, Latitude = testData.Latitude, Longitude = testData.Longitude });
+                _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url, new { }))
+                    .Returns(new WeatherInfoResponse()).Verifiable();
+            }
             _restClientMockForCity.Setup(c => c.Get<CityInfoResponse>(_cityConfig.Url, new { }))
-                .Returns(new CityInfoResponse()).Verifiable();
-            _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url, new { }))
-                .Returns(new WeatherInfoResponse()).Verifiable();
-
-
+                .Returns(citiesInfoResponse).Verifiable();
+           
             _sut = new WeatherApp(
                 new Loader(
                     new CityLoader(_restClientMockForCity.Object, cityConfig),
@@ -37,6 +55,8 @@ namespace WeatherApiTechTask.Test
                 );
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
         public void LoadSomeCitiesWithWeatherAndNotifyThem()
         {
             _sut.Run();
@@ -97,5 +117,26 @@ namespace WeatherApiTechTask.Test
 
         //            3.Processare i dati ricevuti(farlo in maniera scalabile):
         //                Console.writeline
+
+        internal class CityTestInputObj
+        {
+            internal string Name { get; }
+            internal double Latitude { get; }
+            internal double Longitude { get; }
+            internal string WeatherToday { get; }
+            internal string WeatherTomorrow { get; }
+            internal string ExpectedOutcome { get; }
+
+            public CityTestInputObj(string name, double latitude, double longitude, string weatherToday, string weatherTomorrow, string expectedOutcome)
+            {
+                Name = name;
+                Latitude = latitude;
+                Longitude = longitude;
+                WeatherToday = weatherToday;
+                WeatherTomorrow = weatherTomorrow;
+                ExpectedOutcome = expectedOutcome;
+            }
+
+        }
     }
 }
