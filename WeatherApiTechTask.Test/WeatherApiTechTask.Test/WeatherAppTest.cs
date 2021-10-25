@@ -1,6 +1,7 @@
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using WeatherApiTechTask;
 
@@ -8,13 +9,13 @@ namespace WeatherApiTechTask.Test
 {
     public class WeatherAppTest
     {
-        private readonly IWeatherApp _sut;
+        private IWeatherApp _sut;
         //private IWeatherLoader _loader;
         //private IPublisher _publisher;
         //private IRestClient _restClient;
-        private readonly Mock<INotifier> _consoleMock = new Mock<INotifier>();
-        private readonly Mock<IRestClient> _restClientMockForCity = new Mock<IRestClient>();
-        private readonly Mock<IRestClient> _restClientMockForWeather = new Mock<IRestClient>();
+        private readonly Mock<INotifier> _consoleMock = new();
+        private readonly Mock<IRestClient> _restClientMockForCity = new();
+        private readonly Mock<IRestClient> _restClientMockForWeather = new();
 
         private readonly CityLoadConfiguration _cityConfig = new CityLoadConfiguration();
         private readonly WeatherLoadConfiguration _weatherConfig = new WeatherLoadConfiguration();
@@ -38,28 +39,32 @@ namespace WeatherApiTechTask.Test
         public void Setup()
         {
             var citiesInfoResponse = new CitiesInfoResponse() { Cities = new CityInfoResponse[_testData.Length] };
+            var cities = new List<CityInfoResponse>();
             foreach (var testData in _testData)
             {
-                citiesInfoResponse.Cities.Add(new CityInfoResponse 
+                cities.Add(new CityInfoResponse 
                     { Name = testData.Name, Latitude = testData.Latitude, Longitude = testData.Longitude });
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url, new Dictionary<string, string> {
-                            { _weatherConfig.ParamNames.Latitude, testData.Latitude }, { _weatherConfig.ParamNames.Longitude, testData.Longitude },
-                            { _weatherConfig.ParamNames.App, _weatherConfig.ApiKey }, { _weatherConfig.ParamNames.Days, _weatherConfig.Days },
+                        //todo vedi meglio gestione double 
+                            { _weatherConfig.ParamNames.Latitude, testData.Latitude.ToString() }, 
+                            { _weatherConfig.ParamNames.Longitude, testData.Longitude.ToString() },
+                            { _weatherConfig.ParamNames.ApiKey, _weatherConfig.ApiKey }, { _weatherConfig.ParamNames.Days, _weatherConfig.Days },
                         }))
-                    .Returns(new WeatherInfoResponse() {
+                    .Returns(new WeatherInfoResponse()
+                    {
                         Forecast = new ForecastDay[] { 
                             new ForecastDay() { Day = new Day() { Condition = new Condition() { Text = testData.WeatherToday} } },
                             new ForecastDay() { Day = new Day() { Condition = new Condition() { Text = testData.WeatherTomorrow} } },
                         }
                     }).Verifiable();
             }
-            _restClientMockForCity.Setup(c => c.Get<CityInfoResponse>(_cityConfig.Url, null))
+            _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null))
                 .Returns(citiesInfoResponse).Verifiable();
            
             _sut = new WeatherApp(
                 new Loader(
-                    new CityLoader(_restClientMockForCity.Object, cityConfig),
-                    new WeatherLoader(_restClientMockForWeather.Object, weatherConfig)
+                    new CityLoader(_restClientMockForCity.Object, _cityConfig),
+                    new WeatherLoader(_restClientMockForWeather.Object, _weatherConfig)
                     ),
                 new Publisher(_consoleMock.Object)
                 );
@@ -72,39 +77,40 @@ namespace WeatherApiTechTask.Test
 
             _restClientMockForCity.Verify();
             _restClientMockForWeather.Verify();
-            _consoleMock.Verify(c => c.Notify(new WeatherOutcome(new[] { "", "" })), Times.Once);
+            foreach(var row in _testData)
+                _consoleMock.Verify(c => c.Notify(new WeatherOutcome(row.ExpectedOutcome)), Times.Once);
         }
 
         [Test]
         public void ThrowExceptionIfErrorOnLoadingCities()
         {
             _restClientMockForCity.Setup(c => c.Get<CityInfoResponse>(_cityConfig.Url, null))
-                .Throws().Verifiable(); //which exception?
+                .Throws<Exception>().Verifiable(); //which exception?
 
             Assert.Throws<Exception>(() => _sut.Run());
 
             _restClientMockForCity.Verify(); 
-            _restClientMockForWeather.Verify(c => c.Get<CityInfoResponse>(It.IsAny, It.IsAny), Times.Never);
-            _consoleMock.Verify(c => c.Notify(It.IsAny), Times.Never);
+            _restClientMockForWeather.Verify(c => c.Get<CityInfoResponse>(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()), Times.Never);
+            _consoleMock.Verify(c => c.Notify(It.IsAny<WeatherOutcome>()), Times.Never);
         }
 
         [Test]
         public void ThrowExceptionIfErrorOnLoadingWeather()
         {
-            _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(It.IsAny, It.IsAny))
-                .Throws().Verifiable(); //which exception?
+            _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()))
+                .Throws<Exception>().Verifiable(); //which exception?
 
             Assert.Throws<Exception>(() => _sut.Run());
 
             _restClientMockForCity.Verify();
             _restClientMockForWeather.Verify();
-            _consoleMock.Verify(c => c.Notify(It.IsAny), Times.Never);
+            _consoleMock.Verify(c => c.Notify(It.IsAny<WeatherOutcome>()), Times.Never);
         }
 
         [Test]
         public void ThrowExceptionIfErrorOnNotifying()
         {
-            _consoleMock.Setup(c => c.Notify(It.IsAny)).Throws<Exception>().Verifiable();
+            _consoleMock.Setup(c => c.Notify(It.IsAny<WeatherOutcome>())).Throws<Exception>().Verifiable();
 
             Assert.Throws<Exception>(() => _sut.Run());
 
