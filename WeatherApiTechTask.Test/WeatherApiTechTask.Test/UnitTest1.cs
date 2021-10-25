@@ -1,5 +1,6 @@
 using Moq;
 using NUnit.Framework;
+using System;
 
 namespace WeatherApiTechTask.Test
 {
@@ -13,14 +14,20 @@ namespace WeatherApiTechTask.Test
         private readonly Mock<IRestClient> _restClientMockForCity = new Mock<IRestClient>();
         private readonly Mock<IRestClient> _restClientMockForWeather = new Mock<IRestClient>();
 
-        private readonly CityLoader.Configuration _cityConfig = new CityLoader.Configuration();
-        private readonly WeatherLoader.Configuration _weatherConfig = new WeatherLoader.Configuration();
+        private readonly CityLoadConfiguration _cityConfig = new CityLoadConfiguration();
+        private readonly WeatherLoadConfiguration _weatherConfig = new WeatherLoadConfiguration();
 
 
         //PROVA NETMOCK
         [SetUp]
         public void Setup()
-        {          
+        {
+            _restClientMockForCity.Setup(c => c.Get<CityInfoResponse>(_cityConfig.Url, new { }))
+                .Returns(new CityInfoResponse()).Verifiable();
+            _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url, new { }))
+                .Returns(new WeatherInfoResponse()).Verifiable();
+
+
             _sut = new WeatherApp(
                 new Loader(
                     new CityLoader(_restClientMockForCity.Object, cityConfig),
@@ -32,17 +39,49 @@ namespace WeatherApiTechTask.Test
 
         public void LoadSomeCitiesWithWeatherAndNotifyThem()
         {
-            _restClientMockForCity.Setup(c => c.Get<CityInfoResponse>(_cityConfig.Url, new { }))
-                .Returns(new CityInfoResponse()).Verifiable();
-            _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url, new { }))
-                .Returns(new WeatherInfoResponse()).Verifiable();
-
-            _consoleMock.Verify(c => c.Notify(new WeatherOutcome(new { "", "" })), Times.Once);
-
             _sut.Run();
 
             _restClientMockForCity.Verify();
             _restClientMockForWeather.Verify();
+            _consoleMock.Verify(c => c.Notify(new WeatherOutcome(new { "", "" })), Times.Once);
+        }
+
+        [Test]
+        public void ThrowExceptionIfErrorOnLoadingCities()
+        {
+            _restClientMockForCity.Setup(c => c.Get<CityInfoResponse>(_cityConfig.Url, new { }))
+                .Throws().Verifiable(); //which exception?
+
+            Assert.Throws(_ => _sut.Run());
+
+            _restClientMockForCity.Verify(); 
+            _restClientMockForWeather.Verify(c => c.Get<CityInfoResponse>(It.IsAny, It.IsAny), Times.Never);
+            _consoleMock.Verify(c => c.Notify(It.IsAny), Times.Never);
+        }
+
+        [Test]
+        public void ThrowExceptionIfErrorOnLoadingWeather()
+        {
+            _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(It.IsAny, It.IsAny))
+                .Throws().Verifiable(); //which exception?
+
+            Assert.Throws(_ => _sut.Run());
+
+            _restClientMockForCity.Verify();
+            _restClientMockForWeather.Verify();
+            _consoleMock.Verify(c => c.Notify(It.IsAny), Times.Never);
+        }
+
+        [Test]
+        public void ThrowExceptionIfErrorOnNotifying()
+        {
+            _consoleMock.Setup(c => c.Notify(It.IsAny)).Throws().Verifiable();
+
+            Assert.Throws(_ => _sut.Run());
+
+            _restClientMockForCity.Verify();
+            _restClientMockForWeather.Verify();
+            _consoleMock.Verify();
         }
 
 
