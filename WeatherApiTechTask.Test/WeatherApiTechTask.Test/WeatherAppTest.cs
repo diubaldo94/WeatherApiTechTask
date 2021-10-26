@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using WeatherApiTechTask;
 
 namespace WeatherApiTechTask.Test
@@ -10,15 +11,20 @@ namespace WeatherApiTechTask.Test
     public class WeatherAppTest
     {
         private IWeatherApp _sut;
-        //private IWeatherLoader _loader;
+
+
         //private IPublisher _publisher;
         //private IRestClient _restClient;
         private readonly Mock<INotifier> _consoleMock = new();
         private readonly Mock<IRestClient> _restClientMockForCity = new();
         private readonly Mock<IRestClient> _restClientMockForWeather = new();
 
-        private readonly CityLoadConfiguration _cityConfig = new CityLoadConfiguration();
-        private readonly WeatherLoadConfiguration _weatherConfig = new WeatherLoadConfiguration();
+        private readonly CityLoadConfiguration _cityConfig = new();
+        private readonly WeatherLoadConfiguration _weatherConfig = new() {
+            ApiKey = "apikey", 
+            Days = "2",
+            ParamNames = new WeatherParams() { Days = "days", ApiKey = "apikey111", Latitude = "latitude", Longitude = "longitude"}
+        };
 
         private CityTestInputObj[] _testData = new CityTestInputObj[]{
             new CityTestInputObj("Milan", 40.9, 50.3, 
@@ -44,20 +50,26 @@ namespace WeatherApiTechTask.Test
             {
                 cities.Add(new CityInfoResponse 
                     { Name = testData.Name, Latitude = testData.Latitude, Longitude = testData.Longitude });
-                _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url, new Dictionary<string, string> {
+                var @params = new Dictionary<string, string> {
                         //todo vedi meglio gestione double 
-                            { _weatherConfig.ParamNames.Latitude, testData.Latitude.ToString() }, 
+                            { _weatherConfig.ParamNames.Latitude, testData.Latitude.ToString() },
                             { _weatherConfig.ParamNames.Longitude, testData.Longitude.ToString() },
-                            { _weatherConfig.ParamNames.ApiKey, _weatherConfig.ApiKey }, { _weatherConfig.ParamNames.Days, _weatherConfig.Days },
-                        }))
-                    .Returns(new WeatherInfoResponse()
-                    {
-                        Forecast = new ForecastDay[] { 
+                            { _weatherConfig.ParamNames.ApiKey, _weatherConfig.ApiKey },
+                            { _weatherConfig.ParamNames.Days, _weatherConfig.Days },
+                        };
+                var response = new WeatherInfoResponse()
+                {
+                    Forecast = new ForecastDay[] {
                             new ForecastDay() { Day = new Day() { Condition = new Condition() { Text = testData.WeatherToday} } },
                             new ForecastDay() { Day = new Day() { Condition = new Condition() { Text = testData.WeatherTomorrow} } },
                         }
-                    }).Verifiable();
+                };
+                _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url, 
+                    It.Is<Dictionary<string, string>>(d => d[_weatherConfig.ParamNames.Latitude].Equals(testData.Latitude.ToString()) 
+                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString()))))
+                    .Returns(response).Verifiable();
             }
+            citiesInfoResponse.Cities = cities.ToArray();
             _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null))
                 .Returns(citiesInfoResponse).Verifiable();
            
@@ -73,12 +85,16 @@ namespace WeatherApiTechTask.Test
         [Test] //Chek order of the send of messgaes
         public void LoadSomeCitiesWithWeatherAndNotifyThem()
         {
+            //foreach (var row in _testData)
+            //    _consoleMock.Setup(c => c.Notify(new WeatherOutcome(row.ExpectedOutcome)));
+
             _sut.Run();
 
             _restClientMockForCity.Verify();
             _restClientMockForWeather.Verify();
-            foreach(var row in _testData)
-                _consoleMock.Verify(c => c.Notify(new WeatherOutcome(row.ExpectedOutcome)), Times.Once);
+            _consoleMock.Verify(
+                c => c.Notify(It.Is<WeatherOutcome>(e => _testData.Select(i => i.ExpectedOutcome).Contains(e.ExpectedOutcome))), 
+                Times.Exactly(_testData.Length)); //problem: exatcly one for each elemtn??
         }
 
         [Test]
