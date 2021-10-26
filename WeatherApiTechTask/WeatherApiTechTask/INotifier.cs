@@ -2,6 +2,6 @@
 {
     internal interface INotifier
     {
-        void Notify(WeatherOutcome weatherOutcome);
+        void Notify(WeatherOutcome notifiable);
     }
 }

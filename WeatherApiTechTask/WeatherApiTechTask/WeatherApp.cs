@@ -13,7 +13,9 @@
 
         public void Run()
         {
-            throw new System.NotImplementedException();
+            var data = _loader.Load();
+            foreach (var unit in data)
+                _publisher.Publish(unit);
         }
     }
 }

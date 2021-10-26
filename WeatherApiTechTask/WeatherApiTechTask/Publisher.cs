@@ -1,12 +1,20 @@
-﻿namespace WeatherApiTechTask
+﻿using System;
+
+namespace WeatherApiTechTask
 {
     internal class Publisher
     {
-        private INotifier @object;
+        private INotifier _notifier;
 
-        public Publisher(INotifier @object)
+        public Publisher(INotifier notifier)
         {
-            this.@object = @object;
+            _notifier = notifier;
+        }
+
+        internal void Publish(CityModel unit)
+        {
+            string expectedOutcome = unit.Format();
+            _notifier.Notify(new WeatherOutcome(expectedOutcome));
         }
     }
 }

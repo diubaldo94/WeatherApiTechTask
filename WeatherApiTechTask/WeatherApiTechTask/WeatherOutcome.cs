@@ -2,11 +2,11 @@
 {
     internal class WeatherOutcome
     {
-        private string _expectedOutcome;
+        public string ExpectedOutcome { get; }
 
         public WeatherOutcome(string expectedOutcome)
         {
-            _expectedOutcome = expectedOutcome;
+            ExpectedOutcome = expectedOutcome;
         }
     }
 }
