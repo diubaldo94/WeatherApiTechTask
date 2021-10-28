@@ -15,9 +15,7 @@ namespace WeatherApiTechTask.Test
 
         //private IPublisher _publisher;
         //private IRestClient _restClient;
-        private Mock<INotifier> _consoleMock = new();
-        private Mock<IRestClient> _restClientMockForCity = new();
-        private Mock<IRestClient> _restClientMockForWeather = new();
+        
 
         private readonly CityLoadConfiguration _cityConfig = new() { Url = "cities.it" };
         private readonly WeatherLoadConfiguration _weatherConfig = new() {
@@ -50,6 +48,9 @@ namespace WeatherApiTechTask.Test
         [Test] //Chek order of the send of messgaes
         public void LoadSomeCitiesWithWeatherAndNotifyThem()
         {
+            Mock<INotifier> _consoleMock = new();
+            Mock<IRestClient> _restClientMockForCity = new();
+            Mock<IRestClient> _restClientMockForWeather = new();
             var citiesInfoResponse = new CitiesInfoResponse() { Cities = new CityInfoResponse[_testData.Length] };
             var cities = new List<CityInfoResponse>();
             foreach (var testData in _testData)
@@ -99,6 +100,9 @@ namespace WeatherApiTechTask.Test
         [Test]
         public void ThrowExceptionIfErrorOnLoadingCities()
         {
+            Mock<INotifier> _consoleMock = new();
+            Mock<IRestClient> _restClientMockForCity = new();
+            Mock<IRestClient> _restClientMockForWeather = new();
             var citiesInfoResponse = new CitiesInfoResponse() { Cities = new CityInfoResponse[_testData.Length] };
             var cities = new List<CityInfoResponse>();
             foreach (var testData in _testData)
@@ -146,6 +150,9 @@ namespace WeatherApiTechTask.Test
         [Test]
         public void ThrowExceptionIfErrorOnLoadingWeather()
         {
+            Mock<INotifier> _consoleMock = new();
+            Mock<IRestClient> _restClientMockForCity = new();
+            Mock<IRestClient> _restClientMockForWeather = new();
             var citiesInfoResponse = new CitiesInfoResponse() { Cities = new CityInfoResponse[_testData.Length] };
             var cities = new List<CityInfoResponse>();
             foreach (var testData in _testData)
@@ -193,6 +200,9 @@ namespace WeatherApiTechTask.Test
         [Test]
         public void ThrowExceptionIfErrorOnNotifying()
         {
+            Mock<INotifier> _consoleMock = new();
+            Mock<IRestClient> _restClientMockForCity = new();
+            Mock<IRestClient> _restClientMockForWeather = new();
             var citiesInfoResponse = new CitiesInfoResponse() { Cities = new CityInfoResponse[_testData.Length] };
             var cities = new List<CityInfoResponse>();
             foreach (var testData in _testData)
