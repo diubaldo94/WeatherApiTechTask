@@ -2,17 +2,17 @@
 { 
     internal class WeatherLoadConfiguration
     {
-        public string Url { get; internal set; }
+        public string Url { get; set; }
         public WeatherParams ParamNames { get; set; }
-        public string ApiKey { get; internal set; }
-        public string Days { get; internal set; }
+        public string ApiKey { get; set; }
+        public string Days { get; set; }
     }
 
     public class WeatherParams
     {
-        public string Latitude { get; internal set; }
-        public string Longitude { get; internal set; }
-        public string ApiKey { get; internal set; }
-        public string Days { get; internal set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
+        public string ApiKey { get; set; }
+        public string Days { get; set; }
     }
 }

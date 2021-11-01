@@ -2,14 +2,20 @@
 
 namespace WeatherApiTechTask
 {
-    [JsonObject("city")]
-    internal class CityInfoResponse
+    [JsonObject]
+    public class CitiesInfoResponse
     {
         [JsonProperty("name")]
-        public string Name { get; internal set; }
+        public string Name { get; set; }
         [JsonProperty("latitude")]
-        public double Latitude { get; internal set; }
+        public double Latitude { get; set; }
         [JsonProperty("longitude")]
-        public double Longitude { get; internal set; }
+        public double Longitude { get; set; }
+    }
+
+    [JsonArray]
+    public class CityInfoResponse
+    {        
+        public CitiesInfoResponse[] Cities { get; set; }
     }
 }
