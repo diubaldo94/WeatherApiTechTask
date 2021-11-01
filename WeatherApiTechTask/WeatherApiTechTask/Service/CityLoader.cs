@@ -16,9 +16,9 @@ namespace WeatherApiTechTask
 
         internal IEnumerable<BaseCityModel> Load()
         {
-            var response = _restClient.Get<CitiesInfoResponse>(_cityConfig.Url, null);
+            var response = _restClient.Get<CityInfoResponse[]>(_cityConfig.Url, null);
             var cityList = new List<BaseCityModel>();
-            foreach(var city in response.Cities)
+            foreach(var city in response)
             {
                 cityList.Add(new BaseCityModel(city.Name, city.Latitude, city.Longitude));
             }
