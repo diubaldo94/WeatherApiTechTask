@@ -1,11 +1,13 @@
-﻿namespace WeatherApiTechTask
+﻿using System.Collections.Generic;
+
+namespace WeatherApiTechTask
 {
     internal class WeatherApp : IWeatherApp
     {
-        private readonly Loader _loader;
-        private readonly Publisher _publisher;
+        private readonly ILoader<IEnumerable<CityModel>> _loader;
+        private readonly IPublisher _publisher;
 
-        public WeatherApp(Loader loader, Publisher publisher)
+        public WeatherApp(ILoader<IEnumerable<CityModel>> loader, IPublisher publisher)
         {
             _loader = loader;
             _publisher = publisher;

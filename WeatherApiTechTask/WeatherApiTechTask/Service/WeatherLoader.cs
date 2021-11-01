@@ -2,7 +2,7 @@
 
 namespace WeatherApiTechTask
 {
-    internal class WeatherLoader
+    internal class WeatherLoader : IEnricher<BaseCityModel, Forecast>
     {
         private IRestClient _restClient;
         private WeatherLoadConfiguration _weatherConfig;
@@ -13,7 +13,7 @@ namespace WeatherApiTechTask
             _weatherConfig = weatherConfig;
         }
 
-        internal Forecast Load(BaseCityModel city)
+        public Forecast Load(BaseCityModel city)
         {
             var result = _restClient.Get<WeatherInfoResponse>(_weatherConfig.Url,
                 new()

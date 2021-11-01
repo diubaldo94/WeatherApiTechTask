@@ -2,7 +2,7 @@
 
 namespace WeatherApiTechTask
 {
-    internal class Publisher
+    internal class Publisher : IPublisher
     {
         private INotifier _notifier;
 
@@ -11,10 +11,15 @@ namespace WeatherApiTechTask
             _notifier = notifier;
         }
 
-        internal void Publish(CityModel unit)
+        public void Publish(CityModel unit)
         {
             string expectedOutcome = unit.Format();
             _notifier.Notify(new WeatherOutcome(expectedOutcome));
         }
+    }
+
+    internal interface IPublisher
+    {
+        void Publish(CityModel unit);
     }
 }

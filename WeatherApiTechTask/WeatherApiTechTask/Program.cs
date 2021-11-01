@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("WeatherApiTechTask.Test")]
@@ -11,17 +13,28 @@ namespace WeatherApiTechTask
         static void Main(string[] args)
         {
             var configuration = BuildConfiguration();
+            var serviceCollection = GetServices(configuration);
 
+            var app = serviceCollection.BuildServiceProvider().GetService<IWeatherApp>();
+            app.Run();
+        }
+
+        private static ServiceCollection GetServices(IConfiguration configuration)
+        {
             var cityConfig = configuration.GetSection(typeof(CityLoadConfiguration).Name).Get<CityLoadConfiguration>();
             var weatherConfig = configuration.GetSection(typeof(WeatherLoadConfiguration).Name).Get<WeatherLoadConfiguration>();
-            var app = new WeatherApp(
-                new Loader(
-                    new CityLoader(new ApiGateway(), cityConfig),
-                    new WeatherLoader(new ApiGateway(), weatherConfig)
-                    ),
-                new Publisher(new ConsoleNotifier())
-                );
-            app.Run();
+
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddSingleton<IRestClient, ApiGateway>();
+            serviceCollection.AddSingleton<INotifier, ConsoleNotifier>();
+            serviceCollection.AddSingleton<IPublisher, Publisher>();
+            serviceCollection.AddSingleton<ILoader<IEnumerable<BaseCityModel>>, CityLoader>();
+            serviceCollection.AddSingleton<ILoader<IEnumerable<CityModel>>, Loader>();
+            serviceCollection.AddSingleton<IEnricher<BaseCityModel, Forecast>, WeatherLoader>();
+            serviceCollection.AddSingleton(cityConfig);
+            serviceCollection.AddSingleton(weatherConfig);
+            serviceCollection.AddSingleton<IWeatherApp, WeatherApp>();
+            return serviceCollection;
         }
 
         static IConfiguration BuildConfiguration() =>
