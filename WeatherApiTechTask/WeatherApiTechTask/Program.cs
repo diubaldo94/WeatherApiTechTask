@@ -13,6 +13,14 @@ namespace WeatherApiTechTask
         static void Main(string[] args)
         {
             var configuration = BuildConfiguration();
+            var serviceCollection = GetServices(configuration);
+
+            var app = serviceCollection.BuildServiceProvider().GetService<IWeatherApp>();
+            app.Run();
+        }
+
+        private static ServiceCollection GetServices(IConfiguration configuration)
+        {
             var cityConfig = configuration.GetSection(typeof(CityLoadConfiguration).Name).Get<CityLoadConfiguration>();
             var weatherConfig = configuration.GetSection(typeof(WeatherLoadConfiguration).Name).Get<WeatherLoadConfiguration>();
 
@@ -26,16 +34,7 @@ namespace WeatherApiTechTask
             serviceCollection.AddSingleton(cityConfig);
             serviceCollection.AddSingleton(weatherConfig);
             serviceCollection.AddSingleton<IWeatherApp, WeatherApp>();
-
-            var app = serviceCollection.BuildServiceProvider().GetService<IWeatherApp>();
-            //var app = new WeatherApp(
-            //    new Loader(
-            //        new CityLoader(new ApiGateway(), cityConfig),
-            //        new WeatherLoader(new ApiGateway(), weatherConfig)
-            //        ),
-            //    new Publisher(new ConsoleNotifier())
-            //    );
-            app.Run();
+            return serviceCollection;
         }
 
         static IConfiguration BuildConfiguration() =>
