@@ -3,22 +3,22 @@ using System.Collections.Generic;
 
 namespace WeatherApiTechTask
 {
-    internal class Loader
+    internal class Loader : ILoader<IEnumerable<CityModel>>
     {
-        private CityLoader _cityLoader;
-        private WeatherLoader _weatherLoader;
+        private ILoader<IEnumerable<BaseCityModel>> _cityLoader;
+        private IEnricher<BaseCityModel, Forecast> _weatherLoader;
 
-        public Loader(CityLoader cityLoader, WeatherLoader weatherLoader)
+        public Loader(ILoader<IEnumerable<BaseCityModel>> cityLoader, IEnricher<BaseCityModel, Forecast> weatherLoader)
         {
             _cityLoader = cityLoader;
             _weatherLoader = weatherLoader;
         }
 
-        internal IEnumerable<CityModel> Load()
+        public IEnumerable<CityModel> Load()
         {
             var cities = _cityLoader.Load();
             var enrichedCities = new List<CityModel>();
-            foreach(var city in cities)
+            foreach (var city in cities)
             {
                 var dataToEnrich = new CityModel(city.Name, city.Latitude, city.Longitude);
                 var forecast = _weatherLoader.Load(city);

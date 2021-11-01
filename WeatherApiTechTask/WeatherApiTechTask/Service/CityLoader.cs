@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WeatherApiTechTask
 {
-    internal class CityLoader
+    internal class CityLoader : ILoader<IEnumerable<BaseCityModel>>
     {
         private IRestClient _restClient;
         private CityLoadConfiguration _cityConfig;
@@ -14,7 +14,7 @@ namespace WeatherApiTechTask
             _cityConfig = cityConfig;
         }
 
-        internal IEnumerable<BaseCityModel> Load()
+        public IEnumerable<BaseCityModel> Load()
         {
             var response = _restClient.Get<CityInfoResponse[]>(_cityConfig.Url, null);
             var cityList = new List<BaseCityModel>();
