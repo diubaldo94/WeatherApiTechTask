@@ -26,6 +26,7 @@ namespace WeatherApiTechTask
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IRestClient, ApiGateway>();
+            //todo to refactor
             serviceCollection.AddSingleton<INotifier, ConsoleNotifier>();
             serviceCollection.AddSingleton<IPublisher, Publisher>();
             serviceCollection.AddSingleton<ILoader<IEnumerable<BaseCityModel>>, CityLoader>();
