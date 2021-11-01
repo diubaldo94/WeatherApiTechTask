@@ -58,10 +58,13 @@ namespace WeatherApiTechTask.Test
                 { Name = testData.Name, Latitude = testData.Latitude, Longitude = testData.Longitude });
                 var response = new WeatherInfoResponse()
                 {
-                    Forecast = new ForecastDay[] {
-                            new ForecastDay() { Day = new Day() { Condition = new Condition() { Text = testData.WeatherToday} } },
-                            new ForecastDay() { Day = new Day() { Condition = new Condition() { Text = testData.WeatherTomorrow} } },
+                    Forecast = new ForecastDto()
+                    {
+                        ForecastDays = new ForecastDayDto[] {
+                            new ForecastDayDto() { Day = new DayDto() { Condition = new ConditionDto() { Text = testData.WeatherToday} } },
+                            new ForecastDayDto() { Day = new DayDto() { Condition = new ConditionDto() { Text = testData.WeatherTomorrow} } },
                         }
+                    }
                 };
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url,
                    It.Is<Dictionary<string, string>>(
@@ -107,10 +110,13 @@ namespace WeatherApiTechTask.Test
                 //        };
                 var response = new WeatherInfoResponse()
                 {
-                    Forecast = new ForecastDay[] {
-                            new ForecastDay() { Day = new Day() { Condition = new Condition() { Text = testData.WeatherToday} } },
-                            new ForecastDay() { Day = new Day() { Condition = new Condition() { Text = testData.WeatherTomorrow} } },
+                    Forecast = new ForecastDto()
+                    {
+                        ForecastDays = new ForecastDayDto[] {
+                            new ForecastDayDto() { Day = new DayDto() { Condition = new ConditionDto() { Text = testData.WeatherToday} } },
+                            new ForecastDayDto() { Day = new DayDto() { Condition = new ConditionDto() { Text = testData.WeatherTomorrow} } },
                         }
+                    }
                 };
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url,
                     It.Is<Dictionary<string, string>>(
@@ -146,13 +152,16 @@ namespace WeatherApiTechTask.Test
             {
                 cities.Add(new CityInfoResponse
                 { Name = testData.Name, Latitude = testData.Latitude, Longitude = testData.Longitude });
-                
+
                 var response = new WeatherInfoResponse()
                 {
-                    Forecast = new ForecastDay[] {
-                            new ForecastDay() { Day = new Day() { Condition = new Condition() { Text = testData.WeatherToday} } },
-                            new ForecastDay() { Day = new Day() { Condition = new Condition() { Text = testData.WeatherTomorrow} } },
+                    Forecast = new ForecastDto()
+                    {
+                        ForecastDays = new ForecastDayDto[] {
+                            new ForecastDayDto() { Day = new DayDto() { Condition = new ConditionDto() { Text = testData.WeatherToday} } },
+                            new ForecastDayDto() { Day = new DayDto() { Condition = new ConditionDto() { Text = testData.WeatherTomorrow} } },
                         }
+                    }
                 };
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url,
                    It.Is<Dictionary<string, string>>(
@@ -188,13 +197,16 @@ namespace WeatherApiTechTask.Test
             {
                 cities.Add(new CityInfoResponse
                 { Name = testData.Name, Latitude = testData.Latitude, Longitude = testData.Longitude });
-               
+
                 var response = new WeatherInfoResponse()
                 {
-                    Forecast = new ForecastDay[] {
-                            new ForecastDay() { Day = new Day() { Condition = new Condition() { Text = testData.WeatherToday} } },
-                            new ForecastDay() { Day = new Day() { Condition = new Condition() { Text = testData.WeatherTomorrow} } },
+                    Forecast = new ForecastDto()
+                    {
+                        ForecastDays = new ForecastDayDto[] {
+                            new ForecastDayDto() { Day = new DayDto() { Condition = new ConditionDto() { Text = testData.WeatherToday} } },
+                            new ForecastDayDto() { Day = new DayDto() { Condition = new ConditionDto() { Text = testData.WeatherTomorrow} } },
                         }
+                    }
                 };
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url,
                    It.Is<Dictionary<string, string>>(
