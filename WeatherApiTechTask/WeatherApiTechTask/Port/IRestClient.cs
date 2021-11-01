@@ -6,7 +6,6 @@ namespace WeatherApiTechTask
 {
     internal interface IRestClient
     {
-        T Get<T>(string url, Dictionary<string, string> dictionary);
-
+        T Get<T>(string url, Dictionary<string, string> parameters = null, Dictionary<string, string> headers = null);
     }
 }

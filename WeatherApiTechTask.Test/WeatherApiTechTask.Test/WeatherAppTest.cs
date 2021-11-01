@@ -73,11 +73,11 @@ namespace WeatherApiTechTask.Test
                 };
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url,
                     It.Is<Dictionary<string, string>>(d => d[_weatherConfig.ParamNames.Latitude].Equals(testData.Latitude.ToString())
-                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString()))))
+                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString())), null))
                     .Returns(response).Verifiable();
             }
             citiesInfoResponse.Cities = cities.ToArray();
-            _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null))
+            _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null, null))
                 .Returns(citiesInfoResponse).Verifiable();
 
             _sut = new WeatherApp(
@@ -125,11 +125,11 @@ namespace WeatherApiTechTask.Test
                 };
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url,
                     It.Is<Dictionary<string, string>>(d => d[_weatherConfig.ParamNames.Latitude].Equals(testData.Latitude.ToString())
-                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString()))))
+                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString())), null))
                     .Returns(response).Verifiable();
             }
             citiesInfoResponse.Cities = cities.ToArray();
-            _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null))
+            _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null, null))
                 .Throws<Exception>().Verifiable(); //which exception?
 
             _sut = new WeatherApp(
@@ -143,7 +143,7 @@ namespace WeatherApiTechTask.Test
             Assert.Throws<Exception>(() => _sut.Run());
 
             _restClientMockForCity.Verify(); 
-            _restClientMockForWeather.Verify(c => c.Get<CityInfoResponse>(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()), Times.Never);
+            _restClientMockForWeather.Verify(c => c.Get<CityInfoResponse>(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>(), null), Times.Never);
             _consoleMock.Verify(c => c.Notify(It.IsAny<WeatherOutcome>()), Times.Never);
         }
 
@@ -175,11 +175,11 @@ namespace WeatherApiTechTask.Test
                 };
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url,
                     It.Is<Dictionary<string, string>>(d => d[_weatherConfig.ParamNames.Latitude].Equals(testData.Latitude.ToString())
-                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString()))))
+                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString())), null))
                     .Throws<Exception>();
             }
             citiesInfoResponse.Cities = cities.ToArray();
-            _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null))
+            _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null, null))
                 .Returns(citiesInfoResponse).Verifiable();
 
             _sut = new WeatherApp(
@@ -193,7 +193,7 @@ namespace WeatherApiTechTask.Test
             Assert.Throws<Exception>(() => _sut.Run());
 
             _restClientMockForCity.Verify();
-            _restClientMockForWeather.Verify(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url, It.IsAny<Dictionary<string,string>>()), Times.Once);
+            _restClientMockForWeather.Verify(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url, It.IsAny<Dictionary<string,string>>(), null), Times.Once);
             _consoleMock.Verify(c => c.Notify(It.IsAny<WeatherOutcome>()), Times.Never);
         }
 
@@ -225,11 +225,11 @@ namespace WeatherApiTechTask.Test
                 };
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url,
                     It.Is<Dictionary<string, string>>(d => d[_weatherConfig.ParamNames.Latitude].Equals(testData.Latitude.ToString())
-                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString()))))
+                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString())), null))
                     .Returns(response).Verifiable();
             }
             citiesInfoResponse.Cities = cities.ToArray();
-            _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null))
+            _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null, null))
                 .Returns(citiesInfoResponse).Verifiable();
             _consoleMock.Setup(c => c.Notify(It.IsAny<WeatherOutcome>())).Throws<Exception>().Verifiable();
 
