@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WeatherApiTechTask": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
