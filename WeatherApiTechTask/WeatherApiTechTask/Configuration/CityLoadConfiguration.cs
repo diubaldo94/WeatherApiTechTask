@@ -1,7 +1,7 @@
 ﻿namespace WeatherApiTechTask
 {
-    internal class CityLoadConfiguration
+    public class CityLoadConfiguration
     {
-        public string Url { get; internal set; }
+        public string Url { get; set; }
     }
 }

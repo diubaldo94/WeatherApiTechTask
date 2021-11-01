@@ -1,17 +1,17 @@
 ﻿namespace WeatherApiTechTask
 { 
-    internal class WeatherLoadConfiguration
+    public class WeatherLoadConfiguration
     {
-        public string Url { get; internal set; }
+        public string Url { get; set; }
         public WeatherParams ParamNames { get; set; }
-        public string ApiKey { get; internal set; }
-        public string Days { get; internal set; }
+        public string ApiKey { get; set; }
+        public string Days { get; set; }
     }
 
     public class WeatherParams
     {
-        public string Position { get; internal set; }
-        public string ApiKey { get; internal set; }
-        public string Days { get; internal set; }
+        public string Position { get; set; }
+        public string ApiKey { get; set; }
+        public string Days { get; set; }
     }
 }
