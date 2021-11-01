@@ -20,8 +20,7 @@ namespace WeatherApiTechTask
                 {
                     { _weatherConfig.ParamNames.ApiKey, _weatherConfig.ApiKey },
                     { _weatherConfig.ParamNames.Days, _weatherConfig.Days },
-                    { _weatherConfig.ParamNames.Latitude, city.Latitude.ToString() },
-                    { _weatherConfig.ParamNames.Longitude, city.Longitude.ToString() }
+                    { _weatherConfig.ParamNames.Position, $"{city.Latitude:r} {city.Longitude:r}" }
                 });
             return new Forecast(result.Forecast[0].Day.Condition.Text, result.Forecast[1].Day.Condition.Text);
         }

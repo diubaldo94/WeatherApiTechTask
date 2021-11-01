@@ -22,7 +22,7 @@ namespace WeatherApiTechTask.Test
             Url = "weather.it",
             ApiKey = "apikey", 
             Days = "2",
-            ParamNames = new WeatherParams() { Days = "days", ApiKey = "apikey111", Latitude = "latitude", Longitude = "longitude"}
+            ParamNames = new WeatherParams() { Days = "days", ApiKey = "apikey111", Position = "q"}
         };
 
         private CityTestInputObj[] _testData = new CityTestInputObj[]{
@@ -57,13 +57,6 @@ namespace WeatherApiTechTask.Test
             {
                 cities.Add(new CityInfoResponse
                 { Name = testData.Name, Latitude = testData.Latitude, Longitude = testData.Longitude });
-                var @params = new Dictionary<string, string> {
-                        //todo vedi meglio gestione double 
-                            { _weatherConfig.ParamNames.Latitude, testData.Latitude.ToString() },
-                            { _weatherConfig.ParamNames.Longitude, testData.Longitude.ToString() },
-                            { _weatherConfig.ParamNames.ApiKey, _weatherConfig.ApiKey },
-                            { _weatherConfig.ParamNames.Days, _weatherConfig.Days },
-                        };
                 var response = new WeatherInfoResponse()
                 {
                     Forecast = new ForecastDay[] {
@@ -72,9 +65,9 @@ namespace WeatherApiTechTask.Test
                         }
                 };
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url,
-                    It.Is<Dictionary<string, string>>(d => d[_weatherConfig.ParamNames.Latitude].Equals(testData.Latitude.ToString())
-                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString())), null))
-                    .Returns(response).Verifiable();
+                   It.Is<Dictionary<string, string>>(
+                       d => d[_weatherConfig.ParamNames.Position].Equals($"{testData.Latitude:r} {testData.Longitude:r}")), null))
+                   .Returns(response).Verifiable();
             }
             citiesInfoResponse.Cities = cities.ToArray();
             _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null, null))
@@ -109,13 +102,12 @@ namespace WeatherApiTechTask.Test
             {
                 cities.Add(new CityInfoResponse
                 { Name = testData.Name, Latitude = testData.Latitude, Longitude = testData.Longitude });
-                var @params = new Dictionary<string, string> {
-                        //todo vedi meglio gestione double 
-                            { _weatherConfig.ParamNames.Latitude, testData.Latitude.ToString() },
-                            { _weatherConfig.ParamNames.Longitude, testData.Longitude.ToString() },
-                            { _weatherConfig.ParamNames.ApiKey, _weatherConfig.ApiKey },
-                            { _weatherConfig.ParamNames.Days, _weatherConfig.Days },
-                        };
+                //var @params = new Dictionary<string, string> {
+                //        //todo vedi meglio gestione double 
+                //            { _weatherConfig.ParamNames.Position,  $"{testData.Latitude.ToString()} {testData.Longitude.ToString()}"},
+                //            { _weatherConfig.ParamNames.ApiKey, _weatherConfig.ApiKey },
+                //            { _weatherConfig.ParamNames.Days, _weatherConfig.Days },
+                //        };
                 var response = new WeatherInfoResponse()
                 {
                     Forecast = new ForecastDay[] {
@@ -124,8 +116,8 @@ namespace WeatherApiTechTask.Test
                         }
                 };
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url,
-                    It.Is<Dictionary<string, string>>(d => d[_weatherConfig.ParamNames.Latitude].Equals(testData.Latitude.ToString())
-                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString())), null))
+                    It.Is<Dictionary<string, string>>(
+                        d => d[_weatherConfig.ParamNames.Position].Equals($"{testData.Latitude:r} {testData.Longitude:r}")), null))
                     .Returns(response).Verifiable();
             }
             citiesInfoResponse.Cities = cities.ToArray();
@@ -159,13 +151,7 @@ namespace WeatherApiTechTask.Test
             {
                 cities.Add(new CityInfoResponse
                 { Name = testData.Name, Latitude = testData.Latitude, Longitude = testData.Longitude });
-                var @params = new Dictionary<string, string> {
-                        //todo vedi meglio gestione double 
-                            { _weatherConfig.ParamNames.Latitude, testData.Latitude.ToString() },
-                            { _weatherConfig.ParamNames.Longitude, testData.Longitude.ToString() },
-                            { _weatherConfig.ParamNames.ApiKey, _weatherConfig.ApiKey },
-                            { _weatherConfig.ParamNames.Days, _weatherConfig.Days },
-                        };
+                
                 var response = new WeatherInfoResponse()
                 {
                     Forecast = new ForecastDay[] {
@@ -174,9 +160,9 @@ namespace WeatherApiTechTask.Test
                         }
                 };
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url,
-                    It.Is<Dictionary<string, string>>(d => d[_weatherConfig.ParamNames.Latitude].Equals(testData.Latitude.ToString())
-                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString())), null))
-                    .Throws<Exception>();
+                   It.Is<Dictionary<string, string>>(
+                       d => d[_weatherConfig.ParamNames.Position].Equals($"{testData.Latitude:r} {testData.Longitude:r}")), null))
+                   .Throws<Exception>().Verifiable();
             }
             citiesInfoResponse.Cities = cities.ToArray();
             _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null, null))
@@ -209,13 +195,7 @@ namespace WeatherApiTechTask.Test
             {
                 cities.Add(new CityInfoResponse
                 { Name = testData.Name, Latitude = testData.Latitude, Longitude = testData.Longitude });
-                var @params = new Dictionary<string, string> {
-                        //todo vedi meglio gestione double 
-                            { _weatherConfig.ParamNames.Latitude, testData.Latitude.ToString() },
-                            { _weatherConfig.ParamNames.Longitude, testData.Longitude.ToString() },
-                            { _weatherConfig.ParamNames.ApiKey, _weatherConfig.ApiKey },
-                            { _weatherConfig.ParamNames.Days, _weatherConfig.Days },
-                        };
+               
                 var response = new WeatherInfoResponse()
                 {
                     Forecast = new ForecastDay[] {
@@ -224,9 +204,9 @@ namespace WeatherApiTechTask.Test
                         }
                 };
                 _restClientMockForWeather.Setup(c => c.Get<WeatherInfoResponse>(_weatherConfig.Url,
-                    It.Is<Dictionary<string, string>>(d => d[_weatherConfig.ParamNames.Latitude].Equals(testData.Latitude.ToString())
-                        && d[_weatherConfig.ParamNames.Longitude].Equals(testData.Longitude.ToString())), null))
-                    .Returns(response).Verifiable();
+                   It.Is<Dictionary<string, string>>(
+                       d => d[_weatherConfig.ParamNames.Position].Equals($"{testData.Latitude:r} {testData.Longitude:r}")), null))
+                   .Returns(response).Verifiable();
             }
             citiesInfoResponse.Cities = cities.ToArray();
             _restClientMockForCity.Setup(c => c.Get<CitiesInfoResponse>(_cityConfig.Url, null, null))
