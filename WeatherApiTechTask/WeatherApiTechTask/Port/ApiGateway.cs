@@ -12,13 +12,13 @@ namespace WeatherApiTechTask
         {
         }
 
-        public T Get<T>(string url, Dictionary<string, string> headerDictionary)
+        public T Get<T>(string url, Dictionary<string, string> parameterDictionary = null, Dictionary<string, string> headerDictionary = null)
         {
             var client = new RestClient(url);
             client.UseJson();
             client.UseSerializer<CustomJsonSerializer>();
 
-            var request = GetRequest(url, null, headerDictionary);
+            var request = GetRequest(url, parameterDictionary, headerDictionary);
 
             var response = client.Execute<T>(request);
 
