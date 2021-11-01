@@ -1,1 +1,43 @@
-﻿
+﻿Step 1 | Development
+
+	The candidate must write an application that: gets the list of the cities from Musement's API 
+	for each city gets the forecast for the next 2 days using http://api.weatherapi.com 
+	and print to STDOUT "Processed city [city name] | [weather today] - [wheather tomorrow]"
+
+Descrizione processo 
+
+	Il design iniziale dell'applicazione prevede semplicemente un oggetto, WeatherApp, che carica i dati sulle città e relative
+	previsioni meteo (solo i dati necessari) tramite oggetto Loader e li gira all'oggetto Publisher, che si occuperà di trasmettere
+	i dati verso altri componenti, per ciascuno con il formato richiesto (in questo caso semplicemente l'oggetto ConsoleNotifier 
+	per trasmettere l'informazione a console).
+
+	L'oggetto Loader carica tutte le città per mezzo dell'oggetto CityLoader, che a sua volta chiama un Rest client, che si occuperà 
+	di effettuare la chiamata API e di deserializzare da JSON il contenuto della response (o gestire eventuali errori).
+	Per ogni città si ottengono i dati meteo dall'oggetto WeatherLoader, ed anch'esso utilizza lo stesso Rest client.
+	Per entrambe le chiamate vengono deserializzati solo i dati necessari allo scopo attuale dell'applicazione.
+
+	Applicando la metodologia TDD, inizio direttamente dalla scrittura dei test: a questo riguardo, ho scelto di non scrivere
+	dei test "isolati", ovvero una classe di test per ogni classe di produzione, con tutte le dipendeze moccate, ma ho creato
+	un'unica classe di test che contiene tutte le classi di dominio, e testa tutti gli scenari dell'applicazione,
+	con i Mock delle classi di "infrastruttura" che comunicano esternamente al dominio, in questo caso il Rest client 
+	ed il Console Notifier.
+
+	La scelta è ricaduta sui test "sociali" dato che in nessuna delle classi c'è una logica complessa, quindi i casi d'uso 
+	sono in numero ridotto, ed anche per la loro efficacia, dato che copre l'intero dominio.
+	Si sarebbe anche potuto anche simulare il rest client (lanciando in ascolto una porta HTTP da codice) e testare così 
+	l'applicazione nella sua interezza. 
+
+	Per questa applicazione, oltre all'happy path (più città caricate, per ciascuno il caricamento del meteo e la relativa pubblicazione),
+	ho testato i casi di errore, che prevedono sempre che l'applicazione si fermi (anzichè, ad esempio, proseguire con i dati
+	già a disposizione), quindi nel caso di eccezione nel caricamento delle città, oppure di eccezione nel caricamento del meteo
+	di una delle città, o infine di pubblicazione del meteo di una delle città.
+
+	Una volta scritti i test, ho creato le classi di produzione solo fino al punto di far compilare l'applicazione ed avviare i test,
+	per poi implementare il comportamento delle classi ed arrivare ad avere i test tutti verdi.
+	Poi ho scritto le classi di "infrastruttura", così da poter avviare l'applicazione e verificarne l'effettivo funzionamento.
+	Arrivato a quel punto, inizio con il refactoring e la pulizia del codice, tutelato dal fatto che ci siano i test
+	che coprono gli scenari di dominio, e che in caso di regressione possa accorgermene.
+
+	Il grado di scalabilità dell'applicazione potrebbe essere più alto, ma tendo a rimanere sulla semplicità
+	per evitare di overingegnerizzare l'applicazione rispetto all'effettiva evoluzione prevista.
+

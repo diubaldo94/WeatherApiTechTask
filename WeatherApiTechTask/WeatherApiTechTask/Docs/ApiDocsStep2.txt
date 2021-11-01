@@ -1,3 +1,83 @@
-﻿APIs to store and read weather data about cities
+﻿Step 2 | API design (no code required)
 
-1. Set forecast of a specific city
+    Now that we have a service that reads the forecast for a city, we want to save this info in the Musement's API. 
+    The endpoint that receives information about weather for a city does not exist, we only have these 2 endpoints for cities
+
+    GET /api/v3/cities
+    GET /api/v3/cities/{id}
+
+    Please provide the design for:
+
+        endpoint/s to set the forecast for a specific city
+        endpoint/s to read the forecast for a specific city
+
+    Please consider that we need to answer questions like :
+
+        What's the weather in [city] today ?
+        What will it be the weather in [city] tomorrow ?
+        What was the weather in [city] on [day] ?
+
+    For each endpoint provide all required information: endpoint, payload, possible responses etc and description about the behavior.
+
+APIs to store and read weather data about cities
+
+    1a. Create weather type info
+
+        Endpoint: POST /api/v3/forecast
+
+        Request payload:
+        {
+            "forecastType": {
+                "description" : string,
+                "source" : int (ID to associate to weatherapi.com, to allow )
+            }
+        }
+
+        Possible responses:
+            -200 OK             if forecast description was already registered, with response payload { "forecastId" : int }
+            -201 Created        if forecast description is new, with response payload { "forecastId" : int }
+            -400 Bad request    if validation fails
+            -401 Unathorized
+
+        Behavior:
+            -
+
+    1b. Set forecast of a specific city
+
+        Endpoint: POST /api/v3/cities/{id}/weather
+
+        Request payload: 
+        {
+            "forecast" : { 
+                "days" : [
+                    {
+                        "date" : date(format:01-01-0001),
+                        "forecastId" : int,
+                    }, 
+                    ...
+                ]
+            }
+        }
+
+        Behavior: 
+            -Notice if the written ID actually refers to a city on the database
+            -Notice if 
+    
+
+
+    2. Get forecast of a specific city (only one day, selectable by date)
+
+        Endpoint: GET /api/v3/cities/{id}/weather?date={date(format:01-01-0001)}
+
+        Response payload: 
+        {
+            "hasWeatherInfo" : boolean,
+            "forecast" : { //nullable
+                "id": int,
+                "description" : string
+            }
+        }
+
+        Behavior: 
+            -Notice if the written ID actually refers to a city on the database
+            -Notice if 
