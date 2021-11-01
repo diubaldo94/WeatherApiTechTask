@@ -1,0 +1,3 @@
+﻿APIs to store and read weather data about cities
+
+1. Set forecast of a specific city
