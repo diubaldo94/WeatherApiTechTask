@@ -5,7 +5,7 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["WeatherApiTechTask/WeatherApiTechTask.csproj", "WeatherApiTechTask/"]
+COPY ["WeatherApiTechTask/WeatherApiTechTask/WeatherApiTechTask.csproj", "WeatherApiTechTask/"]
 RUN dotnet restore "WeatherApiTechTask/WeatherApiTechTask.csproj"
 COPY . .
 WORKDIR "/src/WeatherApiTechTask"
