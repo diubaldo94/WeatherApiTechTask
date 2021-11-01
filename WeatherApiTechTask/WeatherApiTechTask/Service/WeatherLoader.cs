@@ -22,7 +22,8 @@ namespace WeatherApiTechTask
                     { _weatherConfig.ParamNames.Days, _weatherConfig.Days },
                     { _weatherConfig.ParamNames.Position, $"{city.Latitude:r} {city.Longitude:r}" }
                 });
-            return new Forecast(result.Forecast[0].Day.Condition.Text, result.Forecast[1].Day.Condition.Text);
+            return new Forecast(result.Forecast.ForecastDays[0].Day.Condition.Text,
+                result.Forecast.ForecastDays[1].Day.Condition.Text);
         }
     }
 }

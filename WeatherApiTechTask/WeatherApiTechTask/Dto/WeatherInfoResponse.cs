@@ -1,22 +1,27 @@
 ﻿namespace WeatherApiTechTask
 {
-    internal class WeatherInfoResponse
+    public class WeatherInfoResponse
     {
-        public ForecastDay[] Forecast { get; internal set; }
+        public ForecastDto Forecast { get; set; }
     }
 
-    internal class ForecastDay
+    public class ForecastDto
     {
-        public Day Day { get; internal set; }
+        public ForecastDayDto[] ForecastDays { get; set; }
     }
 
-    internal class Day
+    public class ForecastDayDto
     {
-        public Condition Condition { get; internal set; }
+        public DayDto Day { get; set; }
     }
 
-    internal class Condition
+    public class DayDto
     {
-        public string Text { get; internal set; }
+        public ConditionDto Condition { get; set; }
+    }
+
+    public class ConditionDto
+    {
+        public string Text { get; set; }
     }
 }
