@@ -12,11 +12,13 @@ Descrizione processo
 	per trasmettere l'informazione a console).
 
 	L'oggetto Loader carica tutte le città per mezzo dell'oggetto CityLoader, che a sua volta chiama un Rest client, che si occuperà 
-	di effettuare la chiamata API e di deserializzare da JSON il contenuto della response (o gestire eventuali errori).
+	di effettuare la chiamata API e di deserializzare da JSON (non ho previsto altri formati da codice) 
+	il contenuto della response (o gestire eventuali errori).
 	Per ogni città si ottengono i dati meteo dall'oggetto WeatherLoader, ed anch'esso utilizza lo stesso Rest client.
 	Per entrambe le chiamate vengono deserializzati solo i dati necessari allo scopo attuale dell'applicazione.
 
-	Applicando la metodologia TDD, inizio direttamente dalla scrittura dei test: a questo riguardo, ho scelto di non scrivere
+	Applicando la metodologia TDD, che mi permette di formalizzare i requisiti, chiarire gli scenari possibili e scrivere solo il codice necessario,
+	inizio direttamente dalla scrittura dei test: a questo riguardo, ho scelto di non scrivere
 	dei test "isolati", ovvero una classe di test per ogni classe di produzione, con tutte le dipendeze moccate, ma ho creato
 	un'unica classe di test che contiene tutte le classi di dominio, e testa tutti gli scenari dell'applicazione,
 	con i Mock delle classi di "infrastruttura" che comunicano esternamente al dominio, in questo caso il Rest client 
@@ -31,13 +33,35 @@ Descrizione processo
 	ho testato i casi di errore, che prevedono sempre che l'applicazione si fermi (anzichè, ad esempio, proseguire con i dati
 	già a disposizione), quindi nel caso di eccezione nel caricamento delle città, oppure di eccezione nel caricamento del meteo
 	di una delle città, o infine di pubblicazione del meteo di una delle città.
+	Non c'è una gestione particolare delle eccezioni all'interno dell'applicazione, non essendoci particolari richieste in casi di errori,
+	pertanto per ogni eccezione mi limito a fermare l'applicazione e digitare a console il messaggio d'errore.
+	Inoltre non ho testato il caso in cui non venga caricata nessuna città, dato che dalle specifiche API, ho notato che questo sarebbe un caso di 
+	errore da parte dell'API, con HTTP status code 404 (potrebbe essere un'interpretazione sbagliata, così fosse creerei testerei il caso d'uso).
 
-	Una volta scritti i test, ho creato le classi di produzione solo fino al punto di far compilare l'applicazione ed avviare i test,
+	Una volta scritti i test, creo le classi di produzione solo fino al punto di far compilare l'applicazione ed avviare i test,
 	per poi implementare il comportamento delle classi ed arrivare ad avere i test tutti verdi.
-	Poi ho scritto le classi di "infrastruttura", così da poter avviare l'applicazione e verificarne l'effettivo funzionamento.
+	Poi scrivo le classi di "infrastruttura", così da poter avviare l'applicazione e verificarne l'effettivo funzionamento.
 	Arrivato a quel punto, inizio con il refactoring e la pulizia del codice, tutelato dal fatto che ci siano i test
 	che coprono gli scenari di dominio, e che in caso di regressione possa accorgermene.
 
 	Il grado di scalabilità dell'applicazione potrebbe essere più alto, ma tendo a rimanere sulla semplicità
 	per evitare di overingegnerizzare l'applicazione rispetto all'effettiva evoluzione prevista.
+	Ad esempio la classe Loader, una volta caricata le città, potrebbe gestire il caricamento di più informazioni da più fonti
+	per arrichire il dato, magari facendo più chiamate in asincrono, ma sarebbe una scelta di design esagerata, a meno che non si prevedano
+	queste necessità (e quindi si avrebbe lavoro "gratuito" successivamente).
 
+	Nonostante non sia un'applicazione complessa, i dubbi son stati vari e son sicuro che ci sono vari punti su cui si può discutere,
+	ad esempio i pattern utilizzati, e che si possono migliorare. Tendenzialmente in questi casi cerco di confrontarmi con gli altri sviluppatori
+	per capire qual'è la scelta migliore.
+
+	
+Esecuzione applicazione
+
+	C'è la possibilità di eseguire l'applicazione tramite Docker sia su Windows che su Linux. 
+	Nella root del repo c'è il Dockerfile, che carica il runtime di .NET 5, effettua la compilazione ed infine l'esecuzione dell'applicazione.
+	Per farlo, una volta avviato Docker, posizionarsi nel percorso della root del repository e lanciare i seguenti comandi (la build impiega cira 30 secondi).
+
+		docker build .
+		docker run weatherapitechtask
+
+	
