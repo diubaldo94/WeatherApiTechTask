@@ -1,0 +1,152 @@
+﻿C:\Users\diuba>cd C:\Progetti\WeatherApiTechTask
+
+C:\Progetti\WeatherApiTechTask>docker build
+"docker build" requires exactly 1 argument.
+See 'docker build --help'.
+
+Usage:  docker build [OPTIONS] PATH | URL | -
+
+Build an image from a Dockerfile
+
+C:\Progetti\WeatherApiTechTask>docker build .
+[+] Building 13.3s (18/18) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.1s
+ => => transferring dockerfile: 804B                                                                               0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 382B                                                                                  0.0s
+ => [internal] load metadata for mcr.microsoft.com/dotnet/sdk:5.0                                                  0.9s
+ => [internal] load metadata for mcr.microsoft.com/dotnet/runtime:5.0                                              0.9s
+ => [build 1/7] FROM mcr.microsoft.com/dotnet/sdk:5.0@sha256:1bd86365c0de18fb256bfe44e615c693d6be82cedc74a9a7cfb8  0.0s
+ => [internal] load build context                                                                                  0.1s
+ => => transferring context: 32.37kB                                                                               0.0s
+ => [base 1/2] FROM mcr.microsoft.com/dotnet/runtime:5.0@sha256:82bb2635a4cba8722842ad8decedddbc962b750b25b953c7a  0.0s
+ => CACHED [build 2/7] WORKDIR /src                                                                                0.0s
+ => [build 3/7] COPY [WeatherApiTechTask/WeatherApiTechTask/WeatherApiTechTask.csproj, WeatherApiTechTask/]        0.0s
+ => [build 4/7] RUN dotnet restore "WeatherApiTechTask/WeatherApiTechTask.csproj"                                  6.0s
+ => [build 5/7] COPY . .                                                                                           0.1s
+ => [build 6/7] WORKDIR /src/WeatherApiTechTask                                                                    0.1s
+ => [build 7/7] RUN dotnet build "WeatherApiTechTask.csproj" -c Release -o /app/build                              3.6s
+ => [publish 1/1] RUN dotnet publish "WeatherApiTechTask.csproj" -c Release -o /app/publish                        2.3s
+ => CACHED [base 2/2] WORKDIR /app                                                                                 0.0s
+ => CACHED [final 1/2] WORKDIR /app                                                                                0.0s
+ => [final 2/2] COPY --from=publish /app/publish .                                                                 0.0s
+ => exporting to image                                                                                             0.1s
+ => => exporting layers                                                                                            0.0s
+ => => writing image sha256:dd221d8d862f884ff4a5f7a85c627b9446eb30e18df263bf716617b2c6cf1322                       0.0s
+
+C:\Progetti\WeatherApiTechTask>docker run latest
+Unable to find image 'latest:latest' locally
+docker: Error response from daemon: pull access denied for latest, repository does not exist or may require 'docker login': denied: requested access to the resource is denied.
+See 'docker run --help'.
+
+C:\Progetti\WeatherApiTechTask>docker run
+"docker run" requires at least 1 argument.
+See 'docker run --help'.
+
+Usage:  docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+
+Run a command in a new container
+
+C:\Progetti\WeatherApiTechTask>docker run weatherapitechtask
+Processed city Amsterdam | Patchy rain possible - Patchy rain possible
+Processed city Paris | Patchy rain possible - Moderate rain
+Processed city Rome | Patchy rain possible - Moderate rain
+Processed city Milan | Sunny - Moderate rain
+Processed city Barcelona | Sunny - Patchy rain possible
+Processed city Nice | Sunny - Moderate rain
+Processed city Dubai | Sunny - Sunny
+Processed city New York | Overcast - Sunny
+Processed city Lyon | Patchy rain possible - Heavy rain
+Processed city Bordeaux | Heavy rain - Heavy rain
+Processed city Venice | Heavy rain - Moderate rain
+Processed city San Francisco | Patchy rain possible - Sunny
+Processed city Orlando | Partly cloudy - Sunny
+Processed city Las Vegas | Sunny - Sunny
+Processed city Lisbon | Patchy rain possible - Patchy rain possible
+Processed city Marrakech | Sunny - Patchy rain possible
+Processed city London | Sunny - Patchy rain possible
+Processed city Madrid | Patchy rain possible - Moderate rain
+Processed city Berlin | Patchy rain possible - Partly cloudy
+Processed city Prague | Heavy rain - Partly cloudy
+Processed city Vienna | Heavy rain - Overcast
+Processed city Abu Dhabi | Sunny - Sunny
+Processed city Chicago | Sunny - Partly cloudy
+Processed city Turin | Sunny - Moderate rain
+Processed city Pisa | Patchy rain possible - Heavy rain
+Processed city Mantua | Patchy rain possible - Patchy rain possible
+Processed city Budapest | Moderate rain - Partly cloudy
+Processed city Munich | Patchy rain possible - Partly cloudy
+Processed city Sydney | Partly cloudy - Patchy rain possible
+Processed city Buenos Aires | Moderate rain - Patchy rain possible
+Processed city Washington DC | Patchy rain possible - Sunny
+Processed city San Diego | Sunny - Sunny
+Processed city Los Angeles | Sunny - Sunny
+Processed city Istanbul | Moderate rain - Patchy rain possible
+Processed city Krakow | Moderate rain - Patchy rain possible
+Processed city Lima | Sunny - Sunny
+Processed city Cancun | Patchy rain possible - Partly cloudy
+Processed city Verona | Patchy rain possible - Moderate rain
+Processed city Reykjavik | Sunny - Moderate rain
+Processed city Kos | Patchy rain possible - Patchy rain possible
+Processed city Athens | Patchy rain possible - Sunny
+Processed city Bilbao | Moderate rain - Heavy rain
+Processed city Shanghai | Sunny - Partly cloudy
+Processed city Rio de Janeiro | Moderate rain - Moderate rain
+Processed city Melbourne | Heavy rain - Partly cloudy
+Processed city Innsbruck | Patchy rain possible - Moderate or heavy snow showers
+Processed city Stellenbosch | Partly cloudy - Sunny
+Processed city Pretoria | Sunny - Sunny
+Processed city Plettenberg Bay | Patchy rain possible - Sunny
+Processed city Oudtshoorn | Sunny - Sunny
+Processed city Knysna | Patchy rain possible - Sunny
+Processed city Johannesburg | Sunny - Sunny
+Processed city Hazyview | Sunny - Patchy rain possible
+Processed city Hartbeespoort | Sunny - Sunny
+Processed city Durban | Patchy rain possible - Patchy rain possible
+Processed city Cape Town | Patchy rain possible - Patchy rain possible
+Processed city Ho Chi Minh-byen | Patchy rain possible - Moderate rain
+Processed city Phu Quoc Island | Moderate rain - Heavy rain
+Processed city Nha Trang | Moderate rain - Patchy rain possible
+Processed city Hoi An | Patchy rain possible - Sunny
+Processed city Ho Chi Minh City | Patchy rain possible - Moderate rain
+Processed city Hanoi | Patchy rain possible - Patchy rain possible
+Processed city Ha Long | Patchy rain possible - Patchy rain possible
+Processed city Da Nang | Patchy rain possible - Sunny
+Processed city St. Thomas | Moderate rain - Heavy rain
+Processed city St. John | Moderate rain - Moderate rain
+Processed city Montevideo | Patchy rain possible - Patchy rain possible
+Processed city Williamsburg | Patchy rain possible - Patchy rain possible
+Processed city Virginia Beach | Patchy rain possible - Patchy rain possible
+Processed city Tusayan | Sunny - Sunny
+Processed city Tucson | Partly cloudy - Sunny
+Processed city Tampa | Partly cloudy - Sunny
+Processed city St. Augustine | Patchy rain possible - Patchy rain possible
+Processed city Sedona | Sunny - Sunny
+Processed city Seattle | Moderate rain - Patchy rain possible
+Processed city Savannah | Sunny - Sunny
+Processed city Sarasota | Patchy rain possible - Patchy rain possible
+Processed city Santa Fe | Partly cloudy - Sunny
+Processed city San Luis Obispo | Sunny - Sunny
+Processed city San Antonio | Partly cloudy - Heavy rain
+Processed city Salem | Patchy rain possible - Patchy rain possible
+Processed city Sacramento | Sunny - Sunny
+Processed city Richmond | Patchy rain possible - Partly cloudy
+Processed city Reno | Partly cloudy - Sunny
+Processed city Portland | Patchy rain possible - Patchy rain possible
+Processed city Pittsburgh | Partly cloudy - Partly cloudy
+Processed city Pigeon Forge | Partly cloudy - Patchy rain possible
+Processed city Phoenix | Sunny - Sunny
+Processed city Philadelphia | Patchy rain possible - Sunny
+Processed city Page | Sunny - Sunny
+Processed city Oahu | Patchy rain possible - Patchy rain possible
+Processed city Niagara Falls | Sunny - Patchy rain possible
+Processed city New Orleans | Sunny - Sunny
+Processed city Nashville | Patchy rain possible - Cloudy
+Processed city Naples, Florida | Patchy rain possible - Patchy rain possible
+Processed city Napa | Partly cloudy - Sunny
+Processed city Myrtle Beach | Sunny - Partly cloudy
+Processed city Monterey | Patchy rain possible - Sunny
+Processed city Moab | Sunny - Sunny
+Processed city Miami Beach | Moderate rain - Sunny
+
+C:\Progetti\WeatherApiTechTask>
