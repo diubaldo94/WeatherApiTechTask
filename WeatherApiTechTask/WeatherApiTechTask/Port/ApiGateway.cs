@@ -6,13 +6,8 @@ namespace WeatherApiTechTask
 {
     internal class ApiGateway : IRestClient
     {
-        private const string BodyName = @"application/json; charset=utf-8";
-
-        public ApiGateway()
-        {
-        }
-
-        public T Get<T>(string url, Dictionary<string, string> parameterDictionary = null, Dictionary<string, string> headerDictionary = null)
+        public T Get<T>(string url, Dictionary<string, string> parameterDictionary = null, 
+            Dictionary<string, string> headerDictionary = null)
         {
             var client = new RestClient(url);
             client.UseJson();
