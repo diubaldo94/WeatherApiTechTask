@@ -1,0 +1,41 @@
+﻿Step 2 | API design (no code required)
+
+    Now that we have a service that reads the forecast for a city, we want to save this info in the Musement's API. The endpoint that receives information about weather for a city does not exist, we only have these 2 endpoints for cities
+
+    GET /api/v3/cities
+    GET /api/v3/cities/{id}
+
+    Please provide the design for:
+
+        endpoint/s to set the forecast for a specific city
+        endpoint/s to read the forecast for a specific city
+
+    Please consider that we need to answer questions like :
+
+        What's the weather in [city] today ?
+        What will it be the weather in [city] tomorrow ?
+        What was the weather in [city] on [day] ?
+
+    For each endpoint provide all required information: endpoint, payload, possible responses etc and description about the behavior.
+
+    Important note: we are only interested in the information under "condition" from weatherapi.com
+
+
+Descrizione
+    
+    La richiesta è quella di persistere le informazioni sul meteo per ogni città, prendendo in considerazione solo la descrizione del meteo per ogni giorno.
+    Si deve tener conto però che queste informazioni potrebbero diventare più "ricche", ad esempio si potrebbe inserire il meteo per ogni ora, 
+    oppure la temperatura prevista, ecc.
+    Prendendo in esame la richiesta attuale, il meteo previsto, la considererei una entità, per cui attualmente abbiamo solo la descrizione (es: Nuvoloso),
+    che si può poi associare ad una specifica città per uno specifico intervallo di tempo (per ora sono richiesti solo i giorni).
+    Quindi si rende necessaria una rotta API per la creazione di un nuovo tipo di meteo, che avrà un identificativo.
+    Sicuramente ci si lega alle informazioni della fonte del meteo (che magari potrebbe cambiarli nel tempo), ma ci sono più modi per risolvere questo problema,
+    magari prevedere più sorgenti per le previsioni meteo, tuttavia per questo esercizio sorvoliamo su questo aspetto.
+    Pertanto, al caricamento del meteo di più giorni per più città, si andranno dapprima ad inserire tutte le diverse descrizioni individuate (o verificarne l'esistenza), 
+    e poi per ogni città il meteo previsto (tramite l'identificativo da precedente chiamata) per ciascuno dei giorni tramite un'altra rotta.
+    Ci sarà infine una terza rotta per poter visualizzare queste informazioni per una specifica città per uno specifico giorno, con la possibilità 
+    che la previsione non ci sia. 
+    Ovviamente il meteo può essere aggiornato, ma esporre i dati sulle precedenti rilevazioni non dovrebbe servire.
+    Ogni rotta avrà una fase di validazione della richiesta, che in caso di fallimento restituirà una response 400 Bad request.
+
+    

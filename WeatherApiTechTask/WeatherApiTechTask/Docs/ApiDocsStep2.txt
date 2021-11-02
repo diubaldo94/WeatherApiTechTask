@@ -66,8 +66,7 @@ APIs to store and read weather data about cities
         Possible responses:
             -200 OK             response payload 
             { "days" : [ 
-                {"date" : date(format:01-01-0001), "forecast" : {"id":int, "description":string}, 
-                "timestamp" : datetime, "overwrite" : boolean} 
+                {"date" : date(format:01-01-0001), "forecast" : {"id":int, "description":string}, "isNew" : boolean} 
             ] } 
             -400 Bad request    if validation fails
             -500 Internal server error 
@@ -93,9 +92,8 @@ APIs to store and read weather data about cities
 
         Response payload: 
         {
-            "hasWeatherInfo" : boolean,
-            "timestamp": datetime, 
-            "forecast" : { //nullable
+            "recordDateTime": datetime, 
+            "forecast" : {
                 "id": int,
                 "description" : string
             }
@@ -103,10 +101,12 @@ APIs to store and read weather data about cities
 
         Possible responses:
             -200 OK             
-            -400 Bad request    if validation fails
+            -400 Bad request                if validation fails
+            -404 Not found                  no forecast available for that city on that day
             -500 Internal server error 
             -503 Service unavailable
 
         Behavior: 
-            -Check if the written ID actually refers to a city on system
-            -Notice if 
+            -Check if the written ID actually refers to a city on system and the date is acceptable, else return 400
+            -Check if there is a forecast for that city on that day, else return 404
+            -Return info
