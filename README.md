@@ -1,8 +1,8 @@
-Weather API Tech Task
+# Weather API Tech Task - Musement | TUI
 
-Silvio Di Ubaldo
+## Author: Silvio Di Ubaldo
 
-Execute application with docker 
-	1. checkout project and enter on it root
-	2. docker build .
-	3. docker run weatherapitechtask
+### Execute application with docker 
+	- checkout project and enter on it root
+	- docker build .
+	- docker run weatherapitechtask
