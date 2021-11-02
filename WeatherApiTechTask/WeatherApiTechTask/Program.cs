@@ -12,11 +12,23 @@ namespace WeatherApiTechTask
     {
         static void Main(string[] args)
         {
-            var configuration = BuildConfiguration();
-            var serviceCollection = GetServices(configuration);
+            try
+            {
+                var configuration = BuildConfiguration();
+                var serviceCollection = GetServices(configuration);
 
-            var app = serviceCollection.BuildServiceProvider().GetService<IWeatherApp>();
-            app.Run();
+                var app = serviceCollection.BuildServiceProvider().GetService<IWeatherApp>();
+                app.Run();
+            }
+            catch(Exception e)
+            {
+                ManageException(e);
+            }
+        }
+
+        private static void ManageException(Exception e)
+        {
+            Console.Error.WriteLine(e.Message);
         }
 
         private static ServiceCollection GetServices(IConfiguration configuration)
