@@ -5,8 +5,8 @@ namespace WeatherApiTechTask
 {
     internal class CityLoader : ILoader<IEnumerable<BaseCityModel>>
     {
-        private IRestClient _restClient;
-        private CityLoadConfiguration _cityConfig;
+        private readonly IRestClient _restClient;
+        private readonly CityLoadConfiguration _cityConfig;
 
         public CityLoader(IRestClient restClient, CityLoadConfiguration cityConfig)
         {
@@ -16,7 +16,7 @@ namespace WeatherApiTechTask
 
         public IEnumerable<BaseCityModel> Load()
         {
-            var response = _restClient.Get<CityInfoResponse[]>(_cityConfig.Url, null);
+            var response = _restClient.Get<CityInfoResponse[]>(_cityConfig.Url);
             var cityList = new List<BaseCityModel>();
             foreach(var city in response)
             {

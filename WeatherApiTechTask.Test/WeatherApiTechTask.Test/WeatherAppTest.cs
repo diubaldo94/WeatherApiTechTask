@@ -12,7 +12,7 @@ namespace WeatherApiTechTask.Test
     {
         private IWeatherApp _sut;
               
-        [Test] //Chek order of the send of messgaes
+        [Test] 
         public void LoadSomeCitiesWithWeatherAndNotifyThem()
         {
             Mock<INotifier> consoleMock = new();
@@ -22,7 +22,6 @@ namespace WeatherApiTechTask.Test
             WeatherTestUtils.SetupRestClientCity(restClientMockForCity);
             WeatherTestUtils.SetupRestClientWeather(restClientMockForWeather);
 
-            //build sut
             _sut = new WeatherApp(
                 new Loader(
                     new CityLoader(restClientMockForCity.Object, WeatherTestUtils.CityConfig),
@@ -37,7 +36,7 @@ namespace WeatherApiTechTask.Test
             restClientMockForWeather.Verify();
             consoleMock.Verify(
                 c => c.Notify(It.Is<WeatherOutcome>(e => WeatherTestUtils.TestData.Select(i => i.ExpectedOutcome).Contains(e.Message))), 
-                Times.Exactly(WeatherTestUtils.TestData.Length)); //problem: exatcly one for each elemtn??
+                Times.Exactly(WeatherTestUtils.TestData.Length));
         }
 
         [Test]

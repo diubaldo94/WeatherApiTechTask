@@ -28,7 +28,7 @@ namespace WeatherApiTechTask
 
         private static void ManageException(Exception e)
         {
-            Console.Error.WriteLine(e.Message);
+            Console.Error.WriteLine($"Error : {e.Message}");
         }
 
         private static ServiceCollection GetServices(IConfiguration configuration)
