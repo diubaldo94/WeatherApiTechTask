@@ -20,10 +20,8 @@ namespace WeatherApiTechTask
             var enrichedCities = new List<CityModel>();
             foreach (var city in cities)
             {
-                var dataToEnrich = new CityModel(city.Name, city.Latitude, city.Longitude);
                 var forecast = _weatherLoader.Load(city);
-                dataToEnrich.Forecast = forecast;
-                enrichedCities.Add(dataToEnrich);
+                enrichedCities.Add(new CityModel(city.Name, city.Latitude, city.Longitude, forecast));
             }
             return enrichedCities;
         }

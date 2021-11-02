@@ -6,7 +6,7 @@ namespace WeatherApiTechTask
     {
         public void Notify(WeatherOutcome notifiable)
         {
-            Console.WriteLine(notifiable.ExpectedOutcome);
+            Console.WriteLine(notifiable.Message);
         }
     }
 }

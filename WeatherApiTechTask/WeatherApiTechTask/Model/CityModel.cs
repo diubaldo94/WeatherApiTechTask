@@ -2,13 +2,13 @@
 {
     internal class CityModel : BaseCityModel
     {
-        public CityModel(string name, double latitude, double longitude) : base(name, latitude, longitude)
+        public CityModel(string name, double latitude, double longitude, Forecast forecast) : base(name, latitude, longitude)
         {
+            Forecast = forecast;
         }
 
-        public Forecast Forecast { get; internal set; }
+        public Forecast Forecast { get; }
 
-        public string Format() => $"Processed city {Name} | {Forecast.Today} - {Forecast.Tomorrow}";
     }
 
     internal class BaseCityModel

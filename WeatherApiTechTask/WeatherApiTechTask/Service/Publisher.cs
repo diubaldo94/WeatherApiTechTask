@@ -1,20 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WeatherApiTechTask
 {
     internal class Publisher : IPublisher
     {
-        private INotifier _notifier;
+        private readonly INotifier _consoleNotifier;
 
-        public Publisher(INotifier notifier)
+        public Publisher(INotifier consoleNotifier)
         {
-            _notifier = notifier;
+            _consoleNotifier = consoleNotifier;
         }
+
+        private Dictionary<Func<CityModel, WeatherOutcome>, INotifier> NotifierList() => new() {
+            { m => new WeatherOutcome($"Processed city {m.Name} | {m.Forecast.Today} - {m.Forecast.Tomorrow}"),
+            _consoleNotifier }
+        };
 
         public void Publish(CityModel unit)
         {
-            string expectedOutcome = unit.Format();
-            _notifier.Notify(new WeatherOutcome(expectedOutcome));
+            foreach(var notifier in NotifierList())
+            {
+                notifier.Value.Notify(notifier.Key(unit));
+            }
         }
     }
 

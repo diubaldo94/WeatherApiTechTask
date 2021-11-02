@@ -36,7 +36,7 @@ namespace WeatherApiTechTask.Test
             restClientMockForCity.Verify();
             restClientMockForWeather.Verify();
             consoleMock.Verify(
-                c => c.Notify(It.Is<WeatherOutcome>(e => WeatherTestUtils.TestData.Select(i => i.ExpectedOutcome).Contains(e.ExpectedOutcome))), 
+                c => c.Notify(It.Is<WeatherOutcome>(e => WeatherTestUtils.TestData.Select(i => i.ExpectedOutcome).Contains(e.Message))), 
                 Times.Exactly(WeatherTestUtils.TestData.Length)); //problem: exatcly one for each elemtn??
         }
 
