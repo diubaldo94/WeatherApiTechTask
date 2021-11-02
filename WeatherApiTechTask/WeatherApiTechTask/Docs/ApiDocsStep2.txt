@@ -28,19 +28,23 @@ APIs to store and read weather data about cities
         Request payload:
         {
             "forecastType": {
-                "description" : string,
-                "source" : int (ID to associate to weatherapi.com, to allow )
+                "description" : string
             }
         }
 
         Possible responses:
-            -200 OK             if forecast description was already registered, with response payload { "forecastId" : int }
-            -201 Created        if forecast description is new, with response payload { "forecastId" : int }
+            -200 OK             if forecast description was already registered, with response payload { "forecastId" : int, "isNew" : false }
+            -201 Created        if forecast description is new, with response payload { "forecastId" : int, "isNew" : true }
             -400 Bad request    if validation fails
-            -401 Unathorized
+            -500 Internal server error 
+            -503 Service unavailable
 
         Behavior:
-            -
+            -Check if the request is valid, else return 400
+            -If the forecast description is already persisted, return his ID, else create a new one and persist it,
+                on error return 500
+            -Return result as described above
+
 
     1b. Set forecast of a specific city
 
@@ -59,9 +63,27 @@ APIs to store and read weather data about cities
             }
         }
 
+        Possible responses:
+            -200 OK             response payload 
+            { "days" : [ 
+                {"date" : date(format:01-01-0001), "forecast" : {"id":int, "description":string}, 
+                "timestamp" : datetime, "overwrite" : boolean} 
+            ] } 
+            -400 Bad request    if validation fails
+            -500 Internal server error 
+            -503 Service unavailable
+
         Behavior: 
-            -Notice if the written ID actually refers to a city on the database
-            -Notice if 
+            -Check if the request is valid, else return 400
+            -Check if the written IDs (city and forecasts) refers to persisted data and there are no repeated dates, 
+                else return 400
+            -Check further custom validations (for instance, dates too late not allowed), if them fails, return 400
+            -Persist all new daily forecasts in a transaction, on any error rollback and return 500
+            -Return result as described above
+
+        Descriptions and considerations:
+            -Old records could be unuseful, I've just inserted a boolean to indicate wheter an old weather record
+                for that city on that day has been overwritten
     
 
 
@@ -72,12 +94,19 @@ APIs to store and read weather data about cities
         Response payload: 
         {
             "hasWeatherInfo" : boolean,
+            "timestamp": datetime, 
             "forecast" : { //nullable
                 "id": int,
                 "description" : string
             }
         }
 
+        Possible responses:
+            -200 OK             
+            -400 Bad request    if validation fails
+            -500 Internal server error 
+            -503 Service unavailable
+
         Behavior: 
-            -Notice if the written ID actually refers to a city on the database
+            -Check if the written ID actually refers to a city on system
             -Notice if 
