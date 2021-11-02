@@ -20,7 +20,8 @@ namespace WeatherApiTechTask
             if (response.IsSuccessful || response.Data != null)
                 return response.Data;
 
-            throw response.ErrorException ?? new Exception($"Failed to get data from api {url}");
+            throw response.ErrorException ?? 
+                new Exception($"Failed to get data from api {response.Request.Resource} : {response.Content}");
         }
 
         private static RestRequest GetRequest(string url,

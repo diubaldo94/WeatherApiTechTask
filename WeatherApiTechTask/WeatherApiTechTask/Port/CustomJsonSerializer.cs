@@ -12,7 +12,7 @@ namespace WeatherApiTechTask
         public string Serialize(Parameter bodyParameter) => JsonConvert.SerializeObject(bodyParameter.Value);
 
         public T Deserialize<T>(IRestResponse response) =>
-            response.IsSuccessful ? JsonConvert.DeserializeObject<T>(response.Content) : throw new Exception($"Failed to get data from api");
+            response.IsSuccessful ? JsonConvert.DeserializeObject<T>(response.Content) : default;
 
         public string[] SupportedContentTypes { get; } = { "application/json", "text/json", "text/x-json", "text/javascript", "*+json" };
 
