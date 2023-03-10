@@ -1,6 +1,4 @@
-# Weather API Tech Task - Musement | TUI
-
-## Author: Silvio Di Ubaldo
+# Weather API Tech Task
 
 ### Execute application with docker 
 	- checkout project and enter on it root
